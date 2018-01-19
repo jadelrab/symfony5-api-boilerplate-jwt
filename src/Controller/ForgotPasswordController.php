@@ -33,15 +33,11 @@ class ForgotPasswordController extends FOSRestController
             $userRepository = $em->getRepository(User::class)->findOneBy(['email' => $email]);
             $generatePassword = $this->get('security.password_encoder')
                                     ->encodePassword($user, $passwordGenerator->generatePassword());
-            //$userRepository->setPassword($passwordGenerator->generatePassword());
-
             $userRepository->setPassword($generatePassword);
 
 			$event = new EmailForgotPasswordEvent($userRepository);
             $dispatcher = $this->get('event_dispatcher');
 			$dispatcher->dispatch(EmailForgotPasswordEvent::NAME, $event);
-
-			$em->persist($userRepository);
 
 			$em->persist($userRepository);
             $em->flush();
