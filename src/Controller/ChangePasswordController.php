@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Form\ChangePasswordType;
 use App\Entity\User;
+use App\Event\EmailChangePasswordEvent;
 
 class ChangePasswordController extends FOSRestController
 {
@@ -31,6 +32,11 @@ class ChangePasswordController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $userRepository = $em->getRepository(User::class)->findOneBy(['email' => $email]);
             $userRepository->setPassword($passwordNew);
+
+            $event = new EmailChangePasswordEvent($userRepository);
+            $dispatcher = $this->get('event_dispatcher');
+			$dispatcher->dispatch(EmailChangePasswordEvent::NAME, $event);
+
             $em->persist($userRepository);
             $em->flush();
 
