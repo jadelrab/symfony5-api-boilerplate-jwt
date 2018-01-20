@@ -12,7 +12,7 @@ class MailChangePasswordListener
         $this->mailer = $mailer;
     }
 
-    public function onMailChangePasswordEvent(EmailChangePasswordEvent $event)
+    public function onMailChangePasswordEvent(EmailChangePasswordEvent $event): void
     {
         $user = $event->getUser();
         $email = $event->getUser()->getEmail();
