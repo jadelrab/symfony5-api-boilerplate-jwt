@@ -25,6 +25,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EventListener\MailRegistrationUserListener:
+        arguments: ['@mailer']
+        tags:
+            - { name: kernel.event_listener, event: registration.user.event.email_registration_user_event, method: onMailRegistrationUserEvent }
+
     App\EventListener\MailForgotPasswordListener:
         arguments: ['@mailer']
         tags:

@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Form\UserType;
 use App\Entity\User;
+use App\Event\EmailRegistrationUserEvent;
 
 class RegistrationController extends FOSRestController
 {
@@ -30,6 +31,11 @@ class RegistrationController extends FOSRestController
             $user->setPassword($password);
             $user->setRoles(['ROLE_ADMIN']);
             $em = $this->getDoctrine()->getManager();
+
+            $event = new EmailRegistrationUserEvent($user);
+            $dispatcher = $this->get('event_dispatcher');
+            $dispatcher->dispatch(EmailRegistrationUserEvent::NAME, $event);
+
             $em->persist($user);
             $em->flush();
 
