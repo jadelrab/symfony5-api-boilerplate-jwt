@@ -26,7 +26,7 @@ class MailRegistrationUserListener
             /*
             ->setBody(
                 $this->renderView(
-                    // app/Resources/views/Emails/changePassword.html.twig
+                    // app/Resources/views/Emails/registration.html.twig
                     'emails/changePassword.html.twig',
                     array('name' => $name)
                 ),
@@ -37,7 +37,7 @@ class MailRegistrationUserListener
              * If you also want to include a plaintext version of the message
             ->addPart(
                 $this->renderView(
-                    'Emails/changePassword.txt.twig',
+                    'Emails/registration.txt.twig',
                     array('name' => $name)
                 ),
                 'text/plain'
