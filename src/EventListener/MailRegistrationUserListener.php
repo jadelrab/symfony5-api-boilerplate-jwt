@@ -7,44 +7,39 @@ use App\Event\EmailRegistrationUserEvent;
 
 class MailRegistrationUserListener
 {
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(\Twig_Environment $twig, \Swift_Mailer $mailer)
     {
+        $this->twig = $twig;
         $this->mailer = $mailer;
     }
 
-    public function onMailRegistrationUserEvent(EmailRegistrationUserEvent $event)
+    public function onMailRegistrationUserEvent(EmailRegistrationUserEvent $event): void
     {
         $user = $event->getUser();
         $email = $event->getUser()->getEmail();
         $password = $event->getUser()->getPassword();
         $name = $event->getUser()->getName();
 
-        $message = (new \Swift_Message('Registration User Successfully!'))
+        $body = $this->renderTemplate($name, $email);
+
+		$message = (new \Swift_Message('Registration User Successfully!'))
             ->setFrom($email)
             ->setTo($email)
-            ->setBody('Registration User Successfully, Hello ' . $name)
-            /*
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
-                    'emails/changePassword.html.twig',
-                    array('name' => $name)
-                ),
-                'text/html'
-            )
-            */
-            /*
-             * If you also want to include a plaintext version of the message
-            ->addPart(
-                $this->renderView(
-                    'Emails/registration.txt.twig',
-                    array('name' => $name)
-                ),
-                'text/plain'
-            )
-            */
+            ->setBody($body, 'text/html')
         ;
 
         $this->mailer->send($message);
     }
+
+    public function renderTemplate($name, $email)
+    {
+		return $this->twig->render(
+            'emails/registration.html.twig',
+            [
+                'name' => $name,
+				'email' => $email
+            ]
+        );
+    }
+
 }

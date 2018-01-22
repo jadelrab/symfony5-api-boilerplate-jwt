@@ -7,43 +7,41 @@ use App\Event\EmailForgotPasswordEvent;
 
 class MailForgotPasswordListener
 {
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(\Twig_Environment $twig, \Swift_Mailer $mailer)
     {
+        $this->twig = $twig;
         $this->mailer = $mailer;
     }
 
     public function onMailForgotPasswordEvent(EmailForgotPasswordEvent $event): void
     {
         $user = $event->getUser();
+        $name = $event->getUser()->getName();
         $email = $event->getUser()->getEmail();
         $password = $event->getUser()->getPassword();
+
+        $body = $this->renderTemplate($name, $password, $email);
 
         $message = (new \Swift_Message('Request Reset Password Successfully!'))
             ->setFrom($email)
             ->setTo($email)
-            ->setBody('Request Reset Password Successfully! This is your new password: ' . $password)
-    /*
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
-                    'emails/forgotPassword.html.twig',
-                    array('name' => $name)
-                ),
-                'text/html'
-            )
-    */
-            /*
-             * If you also want to include a plaintext version of the message
-            ->addPart(
-                $this->renderView(
-                    'Emails/forgotPassword.txt.twig',
-                    array('name' => $name)
-                ),
-                'text/plain'
-            )
-            */
+            ->setBody($body, 'text/html')
         ;
 
         $this->mailer->send($message);
     }
+
+    public function renderTemplate($name, $password, $email)
+    {
+		return $this->twig->render(
+            'emails/forgotPassword.html.twig',
+            [
+                'name' => $name,
+                'password' => $password,
+                'email' => $email
+            ]
+        );
+    }
+
+
 }

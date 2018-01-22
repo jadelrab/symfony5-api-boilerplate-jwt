@@ -7,43 +7,39 @@ use App\Event\EmailChangePasswordEvent;
 
 class MailChangePasswordListener
 {
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(\Twig_Environment $twig, \Swift_Mailer $mailer)
     {
+        $this->twig = $twig;
         $this->mailer = $mailer;
     }
 
     public function onMailChangePasswordEvent(EmailChangePasswordEvent $event): void
     {
         $user = $event->getUser();
+        $name = $event->getUser()->getName();
         $email = $event->getUser()->getEmail();
         $password = $event->getUser()->getPassword();
 
-        $message = (new \Swift_Message('Change Password Success!'))
+        $body = $this->renderTemplate($name, $password, $email);
+
+        $message = (new \Swift_Message('Change Password Successfully!'))
             ->setFrom($email)
             ->setTo($email)
-            ->setBody('Change Password Success! This is your new password: ' . $password)
-    /*
-            ->setBody(
-                $this->renderView(
-                    // app/Resources/views/Emails/changePassword.html.twig
-                    'emails/changePassword.html.twig',
-                    array('name' => $name)
-                ),
-                'text/html'
-            )
-    */
-            /*
-             * If you also want to include a plaintext version of the message
-            ->addPart(
-                $this->renderView(
-                    'Emails/changePassword.txt.twig',
-                    array('name' => $name)
-                ),
-                'text/plain'
-            )
-            */
+			->setBody($body, 'text/html')
         ;
 
         $this->mailer->send($message);
+    }
+
+    public function renderTemplate($name, $password, $email)
+    {
+		return $this->twig->render(
+            'emails/changePassword.html.twig',
+            [
+                'name' => $name,
+                'password' => $password,
+				'email' => $email
+            ]
+        );
     }
 }

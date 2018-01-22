@@ -26,17 +26,17 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\MailRegistrationUserListener:
-        arguments: ['@mailer']
+        arguments: ['@twig', '@mailer']
         tags:
             - { name: kernel.event_listener, event: registration.user.event.email_registration_user_event, method: onMailRegistrationUserEvent }
 
     App\EventListener\MailForgotPasswordListener:
-        arguments: ['@mailer']
+        arguments: ['@twig', '@mailer']
         tags:
             - { name: kernel.event_listener, event: forgot.password.event.email_fogot_password_event, method: onMailForgotPasswordEvent }
 
     App\EventListener\MailChangePasswordListener:
-        arguments: ['@mailer']
+        arguments: ['@twig', '@mailer']
         tags:
             - { name: kernel.event_listener, event: change.password.event.email_change_password_event, method: onMailChangePasswordEvent }
 
