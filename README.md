@@ -13,9 +13,9 @@ An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4
 ## Generate the SSH keys
 
 ```
-	$ mkdir var/jwt
-	$ openssl genrsa -out var/jwt/private.pem -aes256 4096
-	$ openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem
+	$ mkdir config/jwt
+	$ openssl genrsa -out config/jwt/private.pem -aes256 4096
+	$ openssl rsa -pubout -in config/jwt/private.pem -out var/jwt/public.pem
 ```
 
 ## Generate Token Authentication with Curl
