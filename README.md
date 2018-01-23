@@ -23,3 +23,14 @@ An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4
 ```
 	$ curl -H 'content-type: application/json' -v -X  POST http://127.0.0.1:8000/api/token -H 'Authorization:Basic username:password'
 ```
+
+## Getting phpunit
+
+```
+    $ php bin/phpunit or ./bin/phpunit
+```
+
+## Example with Symfony4APIBoilerplateJWT
+
+* [How to Build an API-Only JWT Symfony App](https://github.com/Tony133/Symfony4APIBoilerplateJWTBook)
+
