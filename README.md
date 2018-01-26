@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Tony133/Symfony4APIBoilerplateJWT.svg?branch=master)](https://travis-ci.org/Tony133/Symfony4APIBoilerplateJWT)
 
-An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4
+An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4.0
 
 ## Install with Composer
 
