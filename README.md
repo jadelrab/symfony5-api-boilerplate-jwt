@@ -10,6 +10,12 @@ An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4.0
     $ composer create-project tony133/symfony4-api-boilerplate-jwt myProject
 ```
 
+## Setting Environment
+
+```
+    $ cp .env.dist .env
+```
+
 ## Generate the SSH keys
 
 ```
