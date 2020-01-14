@@ -1,6 +1,6 @@
 {
     "name": "tony133/symfony4-api-boilerplate-jwt",
-    "description": "An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4.4",
+    "description": "An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 4.4 LTS",
     "type": "project",
     "license": "MIT",
     "require": {
