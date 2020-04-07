@@ -15,7 +15,6 @@ security:
 
         api:
             pattern:  ^/api
-            anonymous: true
             http_basic: ~
             guard:
                 authenticators:

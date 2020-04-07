@@ -2,7 +2,7 @@
 
 namespace App\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use App\Entity\User;
 
 class EmailRegistrationUserEvent extends Event
@@ -16,7 +16,7 @@ class EmailRegistrationUserEvent extends Event
         $this->user = $user;
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }

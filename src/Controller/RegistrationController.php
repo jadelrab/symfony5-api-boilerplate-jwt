@@ -2,39 +2,44 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Form\UserType;
 use App\Entity\User;
 use App\Event\EmailRegistrationUserEvent;
 
 class RegistrationController extends AbstractFOSRestController
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     /**
-     * @Route(path="/api/register", name="registration")
-     * @Method("POST")
+     * @Route(path="/api/register", name="registration", methods="POST")
      */
-    public function postRegisterAction(Request $request): JsonResponse
+    public function postRegisterAction(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
+            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles(['ROLE_ADMIN']);
             $em = $this->getDoctrine()->getManager();
 
             $event = new EmailRegistrationUserEvent($user);
-            $dispatcher = $this->get('event_dispatcher');
-            $dispatcher->dispatch(EmailRegistrationUserEvent::NAME, $event);
+            $eventDispatcher->dispatch($event, EmailRegistrationUserEvent::NAME);
 
             $em->persist($user);
             $em->flush();

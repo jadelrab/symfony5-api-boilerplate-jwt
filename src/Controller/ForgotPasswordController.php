@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Form\ForgotPasswordType;
 use App\Entity\User;
 use App\Utils\PasswordGenerator;
@@ -16,11 +17,17 @@ use App\Event\EmailForgotPasswordEvent;
 
 class ForgotPasswordController extends AbstractFOSRestController
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     /**
-     * @Route(path="api/forgotPassword", name="forgot_password")
-     * @Method("POST")
+     * @Route(path="api/forgot", name="forgot_password", methods="POST")
      */
-    public function postForgotPasswordAction(Request $request): JsonResponse
+    public function postForgotPasswordAction(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $user = new User();
         $passwordGenerator = new PasswordGenerator();
@@ -31,13 +38,11 @@ class ForgotPasswordController extends AbstractFOSRestController
             $email = $request->request->get('email');
             $em = $this->getDoctrine()->getManager();
             $userRepository = $em->getRepository(User::class)->findOneBy(['email' => $email]);
-            $generatePassword = $this->get('security.password_encoder')
-                                    ->encodePassword($user, $passwordGenerator->generatePassword());
+            $generatePassword = $this->passwordEncoder->encodePassword($user, $passwordGenerator->generatePassword());
             $userRepository->setPassword($generatePassword);
 
 			$event = new EmailForgotPasswordEvent($userRepository);
-            $dispatcher = $this->get('event_dispatcher');
-			$dispatcher->dispatch(EmailForgotPasswordEvent::NAME, $event);
+			$eventDispatcher->dispatch($event, EmailForgotPasswordEvent::NAME);
 
 			$em->persist($userRepository);
             $em->flush();

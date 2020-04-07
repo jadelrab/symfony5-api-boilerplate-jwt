@@ -11,7 +11,7 @@ class MailRegistrationUserListener
 
     protected $mailer;
 
-    public function __construct(\Twig_Environment $twig, \Swift_Mailer $mailer)
+    public function __construct(\Twig\Environment $twig, \Swift_Mailer $mailer)
     {
         $this->twig = $twig;
         $this->mailer = $mailer;

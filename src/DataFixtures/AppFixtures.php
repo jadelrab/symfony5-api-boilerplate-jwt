@@ -5,33 +5,34 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AppFixtures extends Fixture implements ContainerAwareInterface
+class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
 	}
 
-	private function loadUsers(ObjectManager $manager)
+	private function loadUsers(ObjectManager $manager): void
     {
-        $passwordEncoder = $this->container->get('security.password_encoder');
         $userAdmin = new User();
         $userAdmin->setName('tony');
         $userAdmin->setSurname('master');
         $userAdmin->setUsername('tony_admin');
         $userAdmin->setEmail('tony_admin@symfony.com');
         $userAdmin->setRoles(['ROLE_ADMIN']);
-        $encodedPassword = $passwordEncoder->encodePassword($userAdmin, 'admin');
+        $encodedPassword = $this->passwordEncoder->encodePassword($userAdmin, 'admin');
         $userAdmin->setPassword($encodedPassword);
         $manager->persist($userAdmin);
-        $manager->flush();
-    }
 
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
+        $manager->flush();
     }
 }

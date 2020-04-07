@@ -2,22 +2,29 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 
-class LoginController extends Controller
+class LoginController extends AbstractController
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     /**
-     * @Route("/api/token", name="token_authentication")
-     * @Method("POST")
+     * @Route("/api/token", name="token_authentication", methods="POST")
      */
-    public function newTokenAction(Request $request): JsonResponse
+    public function newTokenAction(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $request->getUser()]);
 
@@ -25,19 +32,15 @@ class LoginController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $isValid = $this->get('security.password_encoder')
-            ->isPasswordValid($user, $request->getPassword());
+        $isValid = $this->passwordEncoder->isPasswordValid($user, $request->getPassword());
 
         if (!$isValid) {
             throw new BadCredentialsException();
         }
 
-        $token = $this->get('lexik_jwt_authentication.encoder')
-            ->encode([
-                'username' => $user->getUsername(),
-                'exp' => time() + 3600 // 1 hour expiration
+        return new JsonResponse([
+            'access_token' => $JWTManager->create($user),
+            'exp' => time() + 3600 // 1 hour expiration
         ]);
-
-        return new JsonResponse(['token' => $token]);
     }
 }
