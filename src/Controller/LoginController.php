@@ -24,7 +24,7 @@ class LoginController extends AbstractController
     /**
      * @Route("/api/token", name="token_authentication", methods="POST")
      */
-    public function newTokenAction(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
+    public function newToken(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $request->getUser()]);
 

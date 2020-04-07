@@ -26,7 +26,7 @@ class ChangePasswordController extends AbstractFOSRestController
     /**
      * @Route(path="api/change", name="change_password", methods="POST")
      */
-    public function postChangePasswordAction(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
+    public function changePassword(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $user = new User();
         $form = $this->createForm(ChangePasswordType::class, $user);

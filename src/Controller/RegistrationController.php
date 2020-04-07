@@ -26,7 +26,7 @@ class RegistrationController extends AbstractFOSRestController
     /**
      * @Route(path="/api/register", name="registration", methods="POST")
      */
-    public function postRegisterAction(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
+    public function register(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);

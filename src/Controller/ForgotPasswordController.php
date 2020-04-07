@@ -27,7 +27,7 @@ class ForgotPasswordController extends AbstractFOSRestController
     /**
      * @Route(path="api/forgot", name="forgot_password", methods="POST")
      */
-    public function postForgotPasswordAction(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
+    public function forgotPassword(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $user = new User();
         $passwordGenerator = new PasswordGenerator();
