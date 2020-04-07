@@ -1,17 +1,13 @@
 # Symfony5APIBoilerplateJWT
 
+[![Build Status](https://travis-ci.org/Tony133/Symfony5APIBoilerplateJWT.svg?branch=master)](https://travis-ci.org/Tony133/Symfony5APIBoilerplateJWT)
+
 An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 5
 
 ## Install with Composer
 
 ```
     $ composer create-project tony133/symfony5-api-boilerplate-jwt myProject
-```
-
-## Setting Environment
-
-```
-    $ cp .env.dist .env
 ```
 
 ## Generate the SSH keys
