@@ -19,4 +19,14 @@ class HelloController extends AbstractFOSRestController
             'hello' => 'This is a simple example of resource returned by your APIs'
         ]);
     }
+
+	/**
+	 * @Route("/api/secure", name="admin_index", methods="GET")
+     */
+    public function secure(): Response
+    {
+        return new JsonResponse([
+            'message' => 'This is a simple example of resource protected by your APIs'
+        ]);
+    }
 }
