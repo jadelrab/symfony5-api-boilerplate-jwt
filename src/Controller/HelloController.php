@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HelloController extends AbstractFOSRestController
 {
-	/**
-	 * @Route("/", name="hello_index", methods="GET")
+    /**
+     * @Route("/", name="hello_index", methods="GET")
      */
     public function index(): Response
     {
@@ -20,8 +20,8 @@ class HelloController extends AbstractFOSRestController
         ]);
     }
 
-	/**
-	 * @Route("/api/secure", name="admin_index", methods="GET")
+    /**
+     * @Route("/api/secure", name="secure_index", methods="GET")
      */
     public function secure(): Response
     {
