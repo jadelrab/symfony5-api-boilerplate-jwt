@@ -7,13 +7,12 @@ fos_rest:
     format_listener:
         enabled: true
         rules:
-            - { path: '^/', priorities: ['json'], fallback_format: 'json' }
-            - { path: '^/api', priorities: ['json'], fallback_format: 'json' }
+            - { path: "^/", priorities: ["json"], fallback_format: "json" }
+            - { path: "^/api", priorities: ["json"], fallback_format: "json" }
     versioning: true
     view:
-        view_response_listener: 'force'
-    routing_loader:
-        default_format: json
+        view_response_listener: "force"
+    routing_loader: false
 #    exception:
 #        codes:
 #            App\Exception\MyException: 403
