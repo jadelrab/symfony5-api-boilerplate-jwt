@@ -50,4 +50,4 @@ An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 5
 
 ## Example with Symfony5APIBoilerplateJWT
 
-- [How to Build an API-Only JWT Symfony App](https://github.com/Tony133/Symfony5APIBoilerplateJWTBook)
+- [How to Build an API-Only JWT Symfony App](https://github.com/Tony133/symfony5-api-boilerplate-jwt-book)
