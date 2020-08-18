@@ -1,6 +1,6 @@
 # Symfony5APIBoilerplateJWT
 
-[![Build Status](https://travis-ci.org/Tony133/Symfony5APIBoilerplateJWT.svg?branch=master)](https://travis-ci.org/Tony133/Symfony5APIBoilerplateJWT)
+[![Build Status](https://travis-ci.org/Tony133/symfony5-api-boilerplate-jwt.svg?branch=master)](https://travis-ci.org/Tony133/symfony5-api-boilerplate-jwt)
 
 An API Boilerplate to create a ready-to-use REST API in seconds with Symfony 5
 
